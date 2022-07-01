@@ -1,0 +1,65 @@
+version: '3'
+
+services:
+  mysql8:
+    image: mysql:8.0.29
+    container_name: mysql8
+    command:
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --lower_case_table_names=1
+    restart: unless-stopped
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - 3306:3306
+    volumes:
+      - /home/mysql/data:/var/lib/mysql
+      - /home/mysql/conf/my.cnf:/etc/mysql/my.cnf
+
+  nacos-single:
+    image: nacos/nacos-server:v2.1.0
+    container_name: nacos-single
+    restart: always
+    depends_on:
+      - mysql8
+    environment:
+      PREFER_HOST_MODE: hostname
+      SPRING_DATASOURCE_PLATFORM: mysql
+      MODE: standalone
+      MYSQL_SERVICE_HOST: mysql8
+      MYSQL_SERVICE_DB_NAME: nacos
+      MYSQL_SERVICE_PORT: 3306
+      MYSQL_SERVICE_USER: root
+      MYSQL_SERVICE_PASSWORD: root
+      NACOS_APPLICATION_PORT: 8848
+      JVM_XMS: 512m
+      JVM_MMS: 256m
+    volumes:
+      - /home/nacos/standalone-logs:/home/nacos/logs
+      - /home/nacos/plugins:/home/nacos/plugins
+      - /home/nacos/conf/application.properties:/home/nacos/conf/application.properties
+    ports:
+      - "8848:8848"
+    extra_hosts:
+      - "mysql8:192.168.31.179"
+
+  prometheus:
+    container_name: prometheus
+    image: bitnami/prometheus:2.36.2
+    volumes:
+      - /home/nacos/prometheus/prometheus-standalone.yaml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    depends_on:
+      - nacos-single
+    restart: on-failure
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:9.0.2
+    ports:
+      - "3000:3000"
+    restart: on-failure
