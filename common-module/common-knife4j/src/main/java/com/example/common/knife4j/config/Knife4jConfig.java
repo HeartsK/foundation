@@ -4,7 +4,6 @@ import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -18,7 +17,6 @@ import springfox.documentation.spring.web.plugins.Docket;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * @author
@@ -48,18 +46,10 @@ public class Knife4jConfig {
         if (knife4jProperties.getBasePath().isEmpty()) {
             knife4jProperties.getBasePath().add(BASE_PATH);
         }
-        // noinspection unchecked
-        List<Predicate<String>> basePath = new ArrayList<Predicate<String>>();
-        knife4jProperties.getBasePath().forEach(path -> basePath.add(PathSelectors.ant(path)));
-
         // exclude-path处理
         if (knife4jProperties.getExcludePath().isEmpty()) {
             knife4jProperties.getExcludePath().addAll(DEFAULT_EXCLUDE_PATH);
         }
-
-        List<Predicate<String>> excludePath = new ArrayList<>();
-        knife4jProperties.getExcludePath().forEach(path -> excludePath.add(PathSelectors.ant(path)));
-
         ApiSelectorBuilder builder = new Docket(DocumentationType.OAS_30).host(knife4jProperties.getHost())
                 .apiInfo(apiInfo(knife4jProperties))
                 .select()
