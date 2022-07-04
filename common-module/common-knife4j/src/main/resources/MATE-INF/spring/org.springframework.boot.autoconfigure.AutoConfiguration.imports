@@ -1,0 +1,2 @@
+# AutoConfigureCache auto-configuration imports
+com.example.common.knife4j.config.Knife4jConfig

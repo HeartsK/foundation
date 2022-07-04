@@ -1,9 +1,12 @@
 package com.example.common.knife4j.config;
 
 import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -25,7 +28,8 @@ import java.util.List;
 @EnableOpenApi
 @EnableKnife4j
 @ConditionalOnProperty(name = "knife4j.enabled", matchIfMissing = true)
-public class Knife4jConfig {
+@AutoConfiguration
+public class Knife4jConfig extends WebMvcConfigurationSupport {
 
     /**
      * 默认的排除路径，排除Spring Boot默认的错误处理路径和端点
@@ -108,4 +112,11 @@ public class Knife4jConfig {
                 .version(knife4jProperties.getVersion())
                 .build();
     }
+
+    public void addResourceHandlers(ResourceHandlerRegistry registry){
+        registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resource/");
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resource/webjars");
+        registry.addResourceHandler("doc.html").addResourceLocations("classpath:/META-INF/resource/");
+    }
+
 }
