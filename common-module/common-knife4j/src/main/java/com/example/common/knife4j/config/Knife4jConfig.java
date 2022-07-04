@@ -115,7 +115,7 @@ public class Knife4jConfig extends WebMvcConfigurationSupport {
 
     public void addResourceHandlers(ResourceHandlerRegistry registry){
         registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resource/");
-        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resource/webjars");
+//        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resource/webjars");
         registry.addResourceHandler("doc.html").addResourceLocations("classpath:/META-INF/resource/");
     }
 
