@@ -4,13 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.example</groupId>
+    <groupId>com.foundation</groupId>
     <artifactId>foundation</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
 
     <modules>
         <module>common-module</module>
+        <module>common-gateway</module>
     </modules>
 
     <properties>
@@ -80,14 +81,24 @@
                 <version>0.9.1</version>
             </dependency>
             <dependency>
-                <groupId>com.example</groupId>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>${gson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.foundation</groupId>
                 <artifactId>common-core</artifactId>
                 <version>${foundation.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.google.code.gson</groupId>
-                <artifactId>gson</artifactId>
-                <version>${gson.version}</version>
+                <groupId>com.foundation</groupId>
+                <artifactId>common-security</artifactId>
+                <version>${foundation.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.foundation</groupId>
+                <artifactId>common-knife4j</artifactId>
+                <version>${foundation.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
