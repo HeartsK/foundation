@@ -1,0 +1,3 @@
+# AutoConfigureCache auto-configuration imports
+com.example.common.security.config.WebConfig
+com.example.common.security.config.SecurityConfig

@@ -4,7 +4,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Date;
@@ -16,24 +15,18 @@ import java.util.Map;
  * @date 2022-07-04 16:42
  */
 @Slf4j
-public class JwtUtils {
+public class JWTUtils {
 
     private static final String CLAIM_KEY_USERNAME = "sub";
     private static final String CLAIM_KEY_CREATED = "created";
 
-    @Value("${jwt.secret}")
-    private String secret;
-    @Value("${jwt.expiration}")
-    private Long expire;
-
-
     /**
      * 从token中获取登录用户名
      */
-    public String getUserNameFromToken(String token) {
+    public static String getUserNameFromToken(String token, String secret) {
         String username;
         try {
-            Claims claims = getClaimsFromToken(token);
+            Claims claims = getClaimsFromToken(token, secret);
             username =  claims.getSubject();
         } catch (Exception e) {
             username = null;
@@ -43,33 +36,33 @@ public class JwtUtils {
     /**
      * 校验token
      */
-    public boolean validateToken(String token, UserDetails userDetails) {
-        String username = getUserNameFromToken(token);
-        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    public static boolean validateToken(String token, UserDetails userDetails, String secret) {
+        String username = getUserNameFromToken(token, secret);
+        return username.equals(userDetails.getUsername()) && !isTokenExpired(token, secret);
     }
 
     /**
      * 根据用户信息生成token
      */
-    public String generateToken(UserDetails userDetails) {
+    public static String generateToken(UserDetails userDetails, String secret, Long expiration) {
         Map<String, Object> claims = new HashMap<>();
         claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());
         claims.put(CLAIM_KEY_CREATED, new Date());
-        return generateToken(claims);
+        return generateToken(claims, secret, expiration);
     }
 
     /**
      * 判断token是否已经失效
      */
-    private boolean isTokenExpired(String token) {
-        Date expiredDate = getClaimsFromToken(token).getExpiration();
+    private static boolean isTokenExpired(String token, String secret) {
+        Date expiredDate = getClaimsFromToken(token, secret).getExpiration();
         return expiredDate.before(new Date());
     }
 
-    private String generateToken(Map<String, Object> claims) {
+    private static String generateToken(Map<String, Object> claims, String secret, Long expiration) {
         return Jwts.builder()
                 .setClaims(claims)
-                .setExpiration(generateExpirationDate())
+                .setExpiration(generateExpirationDate(expiration))
                 //签名算法
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
@@ -78,11 +71,11 @@ public class JwtUtils {
     /**
      * 生成token的过期时间
      */
-    private Date generateExpirationDate() {
-        return new Date(System.currentTimeMillis() + expire * 1000);
+    private static Date generateExpirationDate(Long expiration) {
+        return new Date(System.currentTimeMillis() + expiration * 1000);
     }
 
-    private Claims getClaimsFromToken(String token) {
+    private static Claims getClaimsFromToken(String token, String secret) {
         Claims claims = null;
         try {
             claims = Jwts.parser()
