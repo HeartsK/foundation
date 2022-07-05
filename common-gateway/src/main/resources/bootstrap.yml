@@ -1,0 +1,23 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: foundation-gateway
+  profiles:
+    active: ${FOUNDATION_ACTIVE:dev}
+  cloud:
+    nacos:
+      discovery:
+        # 服务注册地址
+        server-addr: ${NACOD_HOST:fundation-register}:${NACOS_PORT:8848}
+        namespace: ${NACOS_NAMESPACE:}
+      config:
+        namespace: ${spring.cloud.nacos.discovery.namespace}
+        # 配置中心地址
+        server-addr: ${spring.cloud.nacos.discovery.server-addr}
+        # 配置文件格式
+        file-extension: yml
+
+
+

@@ -19,6 +19,18 @@ services:
       - /home/mysql/data:/var/lib/mysql
       - /home/mysql/conf/my.cnf:/etc/mysql/my.cnf
 
+  redis-single:
+    image: redis:7.0.2
+    container_name: redis-single
+    restart: unless-stopped
+    command:
+      redis-server /etc/redis.conf --appendonly yes
+    volumes:
+      - /usr/local/redis/redis.conf:/etc/redis.conf
+      - /usr/local/redis/data:/data
+    ports:
+      - "6379:6379"
+
   nacos-single:
     image: nacos/nacos-server:v2.1.0
     container_name: nacos-single
