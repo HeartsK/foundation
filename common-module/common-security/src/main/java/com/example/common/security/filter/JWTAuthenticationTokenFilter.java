@@ -1,16 +1,14 @@
 package com.example.common.security.filter;
 
 import com.example.common.security.config.JWTConfig;
+import com.example.common.security.service.UserService;
 import com.example.common.security.utils.JWTUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.annotation.Resource;
 import javax.servlet.FilterChain;
@@ -24,18 +22,13 @@ import java.io.IOException;
  * @date 2022-07-05 11:34
  */
 @Slf4j
-@Component
-public class JWTAuthenticationTokenFilter extends BasicAuthenticationFilter {
-
-    public JWTAuthenticationTokenFilter(AuthenticationManager authenticationManager) {
-        super(authenticationManager);
-    }
+public class JWTAuthenticationTokenFilter extends OncePerRequestFilter {
 
     @Resource
     private JWTConfig jwtConfig;
 
     @Resource
-    private UserDetailsService userDetailsService;
+    private UserService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {

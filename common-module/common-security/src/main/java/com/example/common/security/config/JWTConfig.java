@@ -18,25 +18,25 @@ public class JWTConfig {
     /**
      * 密钥
      */
-    private String secret;
+    private String secret = "salt";
     /**
      * HeaderKEY
      */
-    private String tokenHeader;
+    private String tokenHeader = "Authorization";
 
     /**
      * Token前缀字符
      */
-    private String tokenPrefix;
+    private String tokenPrefix = "Bearer";
 
     /**
      * 过期时间 单位秒 1天后过期=86400 7天后过期=604800
      */
-    private Long expiration;
+    private Long expiration = 86400L;
 
     /**
      * 配置不需要认证的接口例：/index/**,/login/**,/favicon.ico
      */
-    private String antMatchers;
+    private String antMatchers="/index/*";
 
 }

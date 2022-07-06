@@ -2,7 +2,7 @@ package com.example.common.security.config;
 
 import com.example.common.security.filter.JWTAuthenticationTokenFilter;
 import com.example.common.security.handler.*;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -14,7 +14,7 @@ import javax.annotation.Resource;
  * @author
  * @date 2022-07-05 10:24
  */
-@AutoConfiguration
+@Configuration
 public class SecurityConfig {
 
     @Resource
@@ -40,6 +40,9 @@ public class SecurityConfig {
 
     @Resource
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        if (null == jwtConfig){
+            jwtConfig = new JWTConfig();
+        }
         http.authorizeRequests()
                 //不进行权限验证的请求或资源(从配置文件中读取)
                 .antMatchers(jwtConfig.getAntMatchers().split(",")).permitAll()
