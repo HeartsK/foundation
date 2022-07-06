@@ -2,6 +2,7 @@ package com.example.common.security.config;
 
 import com.example.common.security.filter.JWTAuthenticationTokenFilter;
 import com.example.common.security.handler.*;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -15,6 +16,7 @@ import javax.annotation.Resource;
  * @date 2022-07-05 10:24
  */
 @Configuration
+@ConditionalOnProperty(name = "security.enabled", matchIfMissing = true)
 public class SecurityConfig {
 
     @Resource
