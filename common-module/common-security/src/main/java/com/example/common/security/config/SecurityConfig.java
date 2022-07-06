@@ -38,7 +38,6 @@ public class SecurityConfig {
     @Resource
     private JWTAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
-    @Resource
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         if (null == jwtConfig){
             jwtConfig = new JWTConfig();
