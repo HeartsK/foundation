@@ -11,7 +11,7 @@ spring:
       discovery:
         # 服务注册地址
         server-addr: ${NACOD_HOST:fundation-register}:${NACOS_PORT:8848}
-        namespace: ${NACOS_NAMESPACE:}
+        namespace: ${NACOS_NAMESPACE:fundation-dev}
       config:
         namespace: ${spring.cloud.nacos.discovery.namespace}
         # 配置中心地址
