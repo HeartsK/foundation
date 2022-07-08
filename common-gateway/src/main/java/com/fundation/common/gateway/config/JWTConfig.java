@@ -34,9 +34,4 @@ public class JWTConfig {
      */
     private Long expiration = 86400L;
 
-    /**
-     * 配置不需要认证的接口例：/index/**,/login/**,/favicon.ico
-     */
-    private String antMatchers="/index/*";
-
 }
