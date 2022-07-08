@@ -3,6 +3,8 @@ package com.fundation.common.gateway.config;
 import org.springframework.cloud.gateway.config.GatewayProperties;
 import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.support.NameUtils;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
 import springfox.documentation.swagger.web.SwaggerResource;
 import springfox.documentation.swagger.web.SwaggerResourcesProvider;
 
@@ -14,6 +16,8 @@ import java.util.List;
  * @author
  * @date 2022-07-08 14:18
  */
+@Component
+@Primary
 public class SwaggerResourceConfig implements SwaggerResourcesProvider {
 
 
