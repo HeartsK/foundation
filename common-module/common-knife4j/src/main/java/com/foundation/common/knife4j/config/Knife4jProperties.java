@@ -2,8 +2,8 @@ package com.foundation.common.knife4j.config;
 
 import io.swagger.v3.oas.models.info.Contact;
 import lombok.Data;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  * @author
  * @date 2022-06-30 16:37
  */
-@Component
+@AutoConfiguration
 @ConfigurationProperties(prefix = "knife4j")
 @Data
 public class Knife4jProperties {

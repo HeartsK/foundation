@@ -1,3 +1,4 @@
 # AutoConfigureCache auto-configuration imports
 com.foundation.common.security.config.SecurityConfig
 com.foundation.common.security.config.CommonSecurityConfig
+com.foundation.common.security.config.JWTConfig

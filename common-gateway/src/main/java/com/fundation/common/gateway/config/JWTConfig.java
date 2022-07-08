@@ -1,4 +1,4 @@
-package com.foundation.common.security.config;
+package com.fundation.common.gateway.config;
 
 import lombok.Data;
 import org.springframework.boot.autoconfigure.AutoConfiguration;

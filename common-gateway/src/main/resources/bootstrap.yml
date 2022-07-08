@@ -2,6 +2,8 @@ server:
   port: 8081
 
 spring:
+  main:
+    web-application-type: reactive
   application:
     name: foundation-gateway
   profiles:
@@ -10,14 +12,15 @@ spring:
     nacos:
       discovery:
         # 服务注册地址
-        server-addr: ${NACOD_HOST:fundation-register}:${NACOS_PORT:8848}
-        namespace: ${NACOS_NAMESPACE:fundation-dev}
+        server-addr: ${NACOD_HOST:foundation-register}:${NACOS_PORT:8848}
+        namespace: ${NACOS_NAMESPACE:79cbc738-5af7-4388-9180-5944d72b30cc}
       config:
         namespace: ${spring.cloud.nacos.discovery.namespace}
         # 配置中心地址
         server-addr: ${spring.cloud.nacos.discovery.server-addr}
         # 配置文件格式
         file-extension: yml
+        name: ${spring.application.name}
         shared-configs[0]:
           data-id: application.${spring.cloud.nacos.config.file-extension}
           refresh: true

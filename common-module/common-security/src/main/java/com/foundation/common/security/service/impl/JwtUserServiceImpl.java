@@ -17,7 +17,7 @@ import java.util.List;
  * @author
  * @date 2022-07-06 14:51
  */
-@Service
+@Service("userService")
 public class JwtUserServiceImpl implements UserService {
 
     @Resource

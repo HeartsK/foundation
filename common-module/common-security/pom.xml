@@ -15,6 +15,7 @@
         <dependency>
             <groupId>com.foundation</groupId>
             <artifactId>common-core</artifactId>
+            <version>${foundation.version}</version>
         </dependency>
         <!-- 导入SpringSecurity相关依赖 -->
         <dependency>

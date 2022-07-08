@@ -28,7 +28,7 @@ public class JWTAuthenticationTokenFilter extends OncePerRequestFilter {
     private JWTConfig jwtConfig;
 
     @Resource
-    private UserService userDetailsService;
+    private UserService userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
@@ -38,7 +38,7 @@ public class JWTAuthenticationTokenFilter extends OncePerRequestFilter {
             String username = JWTUtils.getUserNameFromToken(authToken, jwtConfig.getSecret());
             log.info("checking username:{}", username);
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+                UserDetails userDetails = this.userService.loadUserByUsername(username);
                 if (JWTUtils.validateToken(authToken, userDetails, jwtConfig.getSecret())) {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
