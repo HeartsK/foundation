@@ -25,4 +25,20 @@ spring:
           data-id: application.${spring.cloud.nacos.config.file-extension}
           refresh: true
 
+    sentinel:
+      # 取消控制台懒加载
+      eager: true
+      transport:
+        # 控制台地址
+        dashboard: ${SENTINEL-HOST:sentinel-register}:${SENTINEL-PORT:8849}
+        # nacos配置持久化
+      datasource:
+        ds1:
+          nacos:
+            server-addr: ${NACOS_HOST:foundation-register}:${NACOS_PORT:8848}
+            dataId: sentinel-foundation-gateway
+            namespace: ${spring.cloud.nacos.discovery.namespace}
+            groupId: DFAULT_GROUP
+            data-type: json
+            rule-type: flow
 

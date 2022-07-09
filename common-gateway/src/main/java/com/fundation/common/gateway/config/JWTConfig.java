@@ -27,7 +27,7 @@ public class JWTConfig {
     /**
      * Token前缀字符
      */
-    private String tokenPrefix = "Bearer";
+    private String tokenPrefix = "Bearer ";
 
     /**
      * 过期时间 单位秒 1天后过期=86400 7天后过期=604800

@@ -36,6 +36,7 @@
         <mysql-connector-java.version>8.0.29</mysql-connector-java.version>
         <spring-security-oauth2-authorization-server.version>0.3.1</spring-security-oauth2-authorization-server.version>
         <nimbus-jose-jwt.version>9.23</nimbus-jose-jwt.version>
+        <sentinel-datasource-nacos.version>1.8.4</sentinel-datasource-nacos.version>
     </properties>
 
     <dependencyManagement>
@@ -115,6 +116,11 @@
                 <groupId>com.nimbusds</groupId>
                 <artifactId>nimbus-jose-jwt</artifactId>
                 <version>${nimbus-jose-jwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>sentinel-datasource-nacos</artifactId>
+                <version>${sentinel-datasource-nacos.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
