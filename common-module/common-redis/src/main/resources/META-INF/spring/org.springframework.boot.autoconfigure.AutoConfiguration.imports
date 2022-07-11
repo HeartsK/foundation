@@ -1,2 +1,2 @@
 # AutoConfigureCache auto-configuration imports
-com.foundation.common.core.config.JWTConfig
+com.foundation.common.redis.service.RedisService

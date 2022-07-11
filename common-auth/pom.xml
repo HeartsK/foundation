@@ -10,7 +10,29 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>common-auth</artifactId>
-    <description>授权认证服务端</description>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>com.foundation</groupId>
+            <artifactId>common-security</artifactId>
+            <version>${foundation.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.foundation</groupId>
+            <artifactId>common-knife4j</artifactId>
+            <version>${foundation.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security.oauth.boot</groupId>
+            <artifactId>spring-security-oauth2-autoconfigure</artifactId>
+        </dependency>
+    </dependencies>
 </project>

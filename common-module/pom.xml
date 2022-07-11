@@ -15,6 +15,7 @@
         <module>common-core</module>
         <module>common-security</module>
         <module>common-knife4j</module>
+        <module>common-redis</module>
     </modules>
 
 
