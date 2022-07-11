@@ -1,6 +1,5 @@
 package com.foundation.common.security.filter;
 
-import com.foundation.common.security.config.JWTConfig;
 import com.foundation.common.security.service.UserService;
 import com.foundation.common.security.utils.JWTUtils;
 import lombok.extern.slf4j.Slf4j;

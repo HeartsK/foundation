@@ -2,7 +2,6 @@ package com.foundation.common.security.handler;
 
 import com.foundation.common.core.utils.api.R;
 import com.foundation.common.core.utils.api.ResultUtils;
-import com.foundation.common.security.config.JWTConfig;
 import com.foundation.common.security.utils.JWTUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;

@@ -1,9 +1,9 @@
-package com.fundation.common.gateway.config;
+package com.foundation.common.core.config;
 
 import lombok.Data;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.List;
 @Data
 @RefreshScope
 @ConfigurationProperties(prefix = "security.ignore")
-@Configuration
+@AutoConfiguration
 public class IgnoreProperties {
 
     private List<String> whiteUrls = new ArrayList<>();

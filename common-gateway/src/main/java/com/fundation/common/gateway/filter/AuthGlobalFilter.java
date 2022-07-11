@@ -2,8 +2,8 @@ package com.fundation.common.gateway.filter;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
-import com.fundation.common.gateway.config.IgnoreProperties;
-import com.fundation.common.gateway.config.JWTConfig;
+import com.foundation.common.core.config.IgnoreProperties;
+import com.foundation.common.core.config.JWTConfig;
 import com.nimbusds.jose.JWSObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

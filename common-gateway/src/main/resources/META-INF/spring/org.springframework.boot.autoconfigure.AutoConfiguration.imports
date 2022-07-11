@@ -1,2 +1,2 @@
 # AutoConfigureCache auto-configuration imports
-com.fundation.common.gateway.config.JWTConfig
+com.foundation.common.core.config.JWTConfig
