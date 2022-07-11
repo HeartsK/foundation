@@ -1,16 +1,10 @@
 package com.fundation.common.gateway.config;
 
-import com.alibaba.csp.sentinel.adapter.gateway.sc.callback.BlockRequestHandler;
-import com.alibaba.csp.sentinel.adapter.gateway.sc.callback.GatewayCallbackManager;
+import com.fundation.common.gateway.handler.SentinelFallbackHandler;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.server.ServerResponse;
-
-import javax.annotation.PostConstruct;
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 
 /**
  * @author
@@ -19,17 +13,10 @@ import java.util.Map;
 @Configuration
 public class GatewaySentinelConfiguration {
 
-
-    // 自定义限流异常页面
-    @PostConstruct
-    public void initBlockHandlers() {
-
-        BlockRequestHandler blockRequestHandler = (serverWebExchange, throwable) -> {
-            Map<String, String> result = new HashMap<>();
-            result.put("code",HttpStatus.TOO_MANY_REQUESTS.toString());
-            result.put("message","接口被限流了");
-            return ServerResponse.status(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(BodyInserters.fromValue(result));
-        };
-        GatewayCallbackManager.setBlockHandler(blockRequestHandler);
+    @Bean
+    @Order(Ordered.HIGHEST_PRECEDENCE)
+    public SentinelFallbackHandler sentinelGatewayExceptionHandler() {
+        return new SentinelFallbackHandler();
     }
+
 }
