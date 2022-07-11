@@ -14,12 +14,12 @@
     <dependencies>
         <dependency>
             <groupId>com.foundation</groupId>
-            <artifactId>common-security</artifactId>
+            <artifactId>common-knife4j</artifactId>
             <version>${foundation.version}</version>
         </dependency>
         <dependency>
             <groupId>com.foundation</groupId>
-            <artifactId>common-knife4j</artifactId>
+            <artifactId>common-redis</artifactId>
             <version>${foundation.version}</version>
         </dependency>
         <dependency>
@@ -33,6 +33,11 @@
         <dependency>
             <groupId>org.springframework.security.oauth.boot</groupId>
             <artifactId>spring-security-oauth2-autoconfigure</artifactId>
+        </dependency>
+        <!-- 导入SpringSecurity相关依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
     </dependencies>
 </project>

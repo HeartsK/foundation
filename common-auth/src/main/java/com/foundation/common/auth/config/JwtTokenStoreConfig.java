@@ -17,6 +17,7 @@ public class JwtTokenStoreConfig {
 
     /**
      * 生成TokenStore来保存token  此处为JwtTokenStore实现
+     *
      * @return TokenStore
      */
     @Bean
@@ -24,20 +25,23 @@ public class JwtTokenStoreConfig {
         //需要传入JwtAccessTokenConverter
         return new JwtTokenStore(jwtAccessTokenConverter());
     }
+
     /**
-     *  生成JwtAccessTokenConverter转换器，并设置密钥
+     * 生成JwtAccessTokenConverter转换器，并设置密钥
+     *
      * @return JwtAccessTokenConverter
      */
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
         JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
         //设置jwt密钥
-        jwtAccessTokenConverter.setSigningKey("test_key");
+        jwtAccessTokenConverter.setSigningKey("test");
         return jwtAccessTokenConverter;
     }
 
     /**
      * JwtTokenEnhancer的注入
+     *
      * @return
      */
     @Bean

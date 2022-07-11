@@ -6,7 +6,9 @@ import com.foundation.common.security.filter.JWTAuthenticationTokenFilter;
 import com.foundation.common.security.handler.*;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -20,6 +22,7 @@ import javax.annotation.Resource;
  */
 @AutoConfiguration
 @ConditionalOnProperty(name = "security.enabled", matchIfMissing = true)
+@EnableWebSecurity
 public class SecurityConfig {
 
     @Resource
@@ -46,6 +49,7 @@ public class SecurityConfig {
     @Resource
     private JWTAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
+    @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry
                 registry = http.authorizeRequests();

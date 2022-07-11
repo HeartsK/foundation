@@ -1,6 +1,7 @@
 package com.foundation.common.auth.config;
 
 import com.foundation.common.auth.componet.JwtTokenEnhancer;
+import com.foundation.common.auth.exception.CustomWebResponseExceptionTranslator;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -56,6 +57,7 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
                 //通过AuthorizationServerEndpointsConfigurer 授权服务器端点配置加入两个实例
                 .tokenStore(tokenStore)
                 .accessTokenConverter(jwtAccessTokenConverter)
+                .exceptionTranslator(new CustomWebResponseExceptionTranslator())
                 .tokenEnhancer(chain); //设置JWT增强内容
     }
 
