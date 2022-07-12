@@ -1,26 +1,30 @@
 package com.fundation.common.gateway.componet;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.StrUtil;
+import com.foundation.common.core.config.JWTConfig;
+import com.fundation.common.gateway.constant.SecurityConstants;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.ReactiveAuthorizationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.web.server.authorization.AuthorizationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
-import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * 定义授权管理器，判断用户是否有权限访问
@@ -30,6 +34,9 @@ import java.util.Objects;
 @Component
 public class CustomReactiveAuthorizationManager implements ReactiveAuthorizationManager<AuthorizationContext> {
 
+    @Resource
+    private JWTConfig jwtConfig;
+
     /**
      * 此处保存的是资源对应的权限，可以从数据库中获取
      */
@@ -37,8 +44,9 @@ public class CustomReactiveAuthorizationManager implements ReactiveAuthorization
 
     @PostConstruct
     public void initAuthMap() {
-        AUTH_MAP.put("/user/findAllUsers", "user.userInfo");
-        AUTH_MAP.put("/user/addUser", "ROLE_ADMIN");
+        AUTH_MAP.put("GET:/oauth/**", "admin");
+        AUTH_MAP.put("GET:/swagger-resource/**", "admin");
+        AUTH_MAP.put("GET:/login/**", "admin");
     }
 
 
@@ -47,33 +55,58 @@ public class CustomReactiveAuthorizationManager implements ReactiveAuthorization
         ServerWebExchange exchange = authorizationContext.getExchange();
         ServerHttpRequest request = exchange.getRequest();
         String path = request.getURI().getPath();
-
-        // 带通配符的可以使用这个进行匹配
-        PathMatcher pathMatcher = new AntPathMatcher();
+        String method = request.getMethodValue();
         String authorities = AUTH_MAP.get(path);
         log.info("访问路径:[{}],所需要的权限是:[{}]", path, authorities);
-
         // option 请求，全部放行
         if (request.getMethod() == HttpMethod.OPTIONS) {
             return Mono.just(new AuthorizationDecision(true));
         }
-
-        // 不在权限范围内的url，全部拒绝
-        if (!StringUtils.hasText(authorities)) {
+        //判断是否携带token信息
+        String token = request.getHeaders().getFirst(jwtConfig.getTokenHeader());
+        if (StrUtil.isBlank(token) && !StrUtil.startWithIgnoreCase(token, jwtConfig.getTokenPrefix()) ) {
             return Mono.just(new AuthorizationDecision(false));
         }
-
-        return authentication
+        String restfulPath = method+":"+path;
+        /**
+         * 鉴权开始
+         *
+         * 缓存取 [URL权限-角色集合] 规则数据
+         * urlPermRolesRules = [{'key':'GET:/api/v1/users/*','value':['ADMIN','TEST']},...]
+         */
+        //从redis中获取权限
+//        Map<String, Object> urlPermRolesRules = redisTemplate.opsForHash().entries(GlobalConstants.URL_PERM_ROLES_KEY);
+        // 带通配符的可以使用这个进行匹配
+        PathMatcher pathMatcher = new AntPathMatcher();
+        // 根据请求路径获取有访问权限的角色列表
+        List<String> authorizedRoles = new ArrayList<>(); // 拥有访问权限的角色
+        boolean requireCheck = false; // 是否需要鉴权，默认未设置拦截规则不需鉴权
+        for (Map.Entry<String, String> permRoles : AUTH_MAP.entrySet()) {
+            String perm = permRoles.getKey();
+            if (pathMatcher.match(perm, restfulPath)) {
+                List<String> roles = Convert.toList(String.class, permRoles.getValue());
+                authorizedRoles.addAll(roles);
+                if (!requireCheck) {
+                    requireCheck = true;
+                }
+            }
+        }
+        // 没有设置拦截规则放行
+        if (!requireCheck) {
+            return Mono.just(new AuthorizationDecision(true));
+        }
+        // 判断JWT中携带的用户角色是否有权限访问
+       return authentication
                 .filter(Authentication::isAuthenticated)
-                .filter(a -> a instanceof JwtAuthenticationToken)
-                .cast(JwtAuthenticationToken.class)
-                .doOnNext(token -> {
-                    System.out.println(token.getToken().getHeaders());
-                    System.out.println(token.getTokenAttributes());
-                })
-                .flatMapIterable(AbstractAuthenticationToken::getAuthorities)
+                .flatMapIterable(Authentication::getAuthorities)
                 .map(GrantedAuthority::getAuthority)
-                .any(authority -> Objects.equals(authority, authorities))
+                .any(authority -> {
+                    String roleCode = StrUtil.removePrefix(authority, SecurityConstants.AUTHORITY_PREFIX);// ROLE_ADMIN移除前缀ROLE_得到用户的角色编码ADMIN
+                    /*if (GlobalConstants.ROOT_ROLE_CODE.equals(roleCode)) {
+                        return true; // 如果是超级管理员则放行
+                    }*/
+                    return CollectionUtil.isNotEmpty(authorizedRoles) && authorizedRoles.contains(roleCode);
+                })
                 .map(AuthorizationDecision::new)
                 .defaultIfEmpty(new AuthorizationDecision(false));
     }
