@@ -30,6 +30,7 @@ public class JwtTokenEnhancer implements TokenEnhancer {
         //给的参数是oAuth2的AccessToken，实现类是DefaultOAuth2AccessToken，
         //里面有个setAdditionalInformation方法添加自定义信息（Map类型）
         additionalInformation.put("username", user.getUsername());
+//        additionalInformation.put("clientId", user.getClientId());
         token.setAdditionalInformation(additionalInformation);
         return accessToken;
     }

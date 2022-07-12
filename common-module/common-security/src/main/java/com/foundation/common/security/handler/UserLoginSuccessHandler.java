@@ -1,5 +1,6 @@
 package com.foundation.common.security.handler;
 
+import com.foundation.common.core.config.JWTConfig;
 import com.foundation.common.core.utils.api.R;
 import com.foundation.common.core.utils.api.ResultUtils;
 import com.foundation.common.security.utils.JWTUtils;

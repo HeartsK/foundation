@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -29,6 +30,7 @@ import java.util.List;
 @EnableKnife4j
 @ConditionalOnProperty(name = "knife4j.enabled", matchIfMissing = true)
 @AutoConfiguration
+@EnableWebMvc
 public class Knife4jConfig extends WebMvcConfigurationSupport {
 
     /**
