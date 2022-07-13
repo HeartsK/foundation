@@ -24,6 +24,9 @@ spring:
         shared-configs[0]:
           data-id: application.${spring.cloud.nacos.config.file-extension}
           refresh: true
+        shared-configs[1]:
+          data-id: redis.${spring.cloud.nacos.config.file-extension}
+          refresh: true
 
     sentinel:
       # 取消控制台懒加载

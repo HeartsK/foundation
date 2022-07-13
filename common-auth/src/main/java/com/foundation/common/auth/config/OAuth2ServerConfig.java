@@ -1,7 +1,7 @@
 package com.foundation.common.auth.config;
 
 import com.foundation.common.auth.componet.JwtTokenEnhancer;
-import com.foundation.common.auth.constant.AuthConstant;
+import com.foundation.common.core.constant.AuthConstant;
 import com.foundation.common.auth.exception.CustomWebResponseExceptionTranslator;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

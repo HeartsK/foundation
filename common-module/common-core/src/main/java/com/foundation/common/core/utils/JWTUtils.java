@@ -1,13 +1,23 @@
 package com.foundation.common.core.utils;
 
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
+import com.foundation.common.core.constant.AuthConstant;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author
@@ -85,6 +95,19 @@ public class JWTUtils {
             log.info("JWT格式验证失败:{}",token);
         }
         return claims;
+    }
+
+    public static JSONObject getJwtPayload() {
+        JSONObject jsonObject = null;
+        String payload = ((ServletRequestAttributes) Objects.requireNonNull(RequestContextHolder.getRequestAttributes())).getRequest().getHeader(AuthConstant.JWT_PAYLOAD_KEY);
+        if (StrUtil.isNotBlank(payload)) {
+            try {
+                jsonObject = JSONUtil.parseObj(URLDecoder.decode(payload, StandardCharsets.UTF_8.name()));
+            } catch (UnsupportedEncodingException e) {
+                log.error(e.getMessage());
+            }
+        }
+        return jsonObject;
     }
 
 }

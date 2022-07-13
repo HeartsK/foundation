@@ -3,11 +3,11 @@ package com.fundation.common.gateway.config;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.io.IoUtil;
 import com.foundation.common.core.config.IgnoreProperties;
+import com.foundation.common.core.constant.AuthConstant;
 import com.fundation.common.gateway.componet.CustomReactiveAuthorizationManager;
 import com.fundation.common.gateway.componet.CustomServerAccessDeniedHandler;
 import com.fundation.common.gateway.componet.CustomServerAuthenticationEntryPoint;
 import com.fundation.common.gateway.componet.CustomServerBearerTokenAuthenticationConverter;
-import com.fundation.common.gateway.constant.SecurityConstants;
 import com.fundation.common.gateway.filter.TokenTransferFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -91,7 +91,7 @@ public class Oauth2ResourceServerConfig {
         // 从jwt 中获取该令牌可以访问的权限
         JwtGrantedAuthoritiesConverter authoritiesConverter = new JwtGrantedAuthoritiesConverter();
         // 取消权限的前缀，默认会加上SCOPE_
-        authoritiesConverter.setAuthorityPrefix(SecurityConstants.AUTHORITY_PREFIX);
+        authoritiesConverter.setAuthorityPrefix(AuthConstant.AUTHORITY_PREFIX);
         // 从那个字段中获取权限
         authoritiesConverter.setAuthoritiesClaimName("scope");
 

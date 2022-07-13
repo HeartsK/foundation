@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import com.foundation.common.core.config.JWTConfig;
-import com.fundation.common.gateway.constant.SecurityConstants;
+import com.foundation.common.core.constant.AuthConstant;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
@@ -101,7 +101,7 @@ public class CustomReactiveAuthorizationManager implements ReactiveAuthorization
                 .flatMapIterable(Authentication::getAuthorities)
                 .map(GrantedAuthority::getAuthority)
                 .any(authority -> {
-                    String roleCode = StrUtil.removePrefix(authority, SecurityConstants.AUTHORITY_PREFIX);// ROLE_ADMIN移除前缀ROLE_得到用户的角色编码ADMIN
+                    String roleCode = StrUtil.removePrefix(authority, AuthConstant.AUTHORITY_PREFIX);// ROLE_ADMIN移除前缀ROLE_得到用户的角色编码ADMIN
                     /*if (GlobalConstants.ROOT_ROLE_CODE.equals(roleCode)) {
                         return true; // 如果是超级管理员则放行
                     }*/
