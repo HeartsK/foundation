@@ -3,10 +3,12 @@ package com.fundation.common.gateway.componet;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
+import com.foundation.common.core.config.IgnoreProperties;
 import com.foundation.common.core.config.JWTConfig;
 import com.foundation.common.core.constant.AuthConstant;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.authorization.AuthorizationDecision;
@@ -32,10 +34,14 @@ import java.util.Map;
  */
 @Slf4j
 @Component
+@RefreshScope
 public class CustomReactiveAuthorizationManager implements ReactiveAuthorizationManager<AuthorizationContext> {
 
     @Resource
     private JWTConfig jwtConfig;
+
+    @Resource
+    private IgnoreProperties ignoreProperties;
 
     /**
      * 此处保存的是资源对应的权限，可以从数据库中获取
@@ -47,6 +53,7 @@ public class CustomReactiveAuthorizationManager implements ReactiveAuthorization
         AUTH_MAP.put("GET:/oauth/**", "admin");
         AUTH_MAP.put("GET:/swagger-resource/**", "admin");
         AUTH_MAP.put("GET:/login/**", "admin");
+        AUTH_MAP.put("GET:/doc.html", "admin");
     }
 
 
@@ -58,6 +65,13 @@ public class CustomReactiveAuthorizationManager implements ReactiveAuthorization
         String method = request.getMethodValue();
         String authorities = AUTH_MAP.get(path);
         log.info("访问路径:[{}],所需要的权限是:[{}]", path, authorities);
+        //白名单请求全部放行
+        AntPathMatcher matcher = new AntPathMatcher();
+        for (String whiteUrl : ignoreProperties.getWhiteUrls()) {
+            if (matcher.match(whiteUrl, path)){
+                return Mono.just(new AuthorizationDecision(true));
+            }
+        }
         // option 请求，全部放行
         if (request.getMethod() == HttpMethod.OPTIONS) {
             return Mono.just(new AuthorizationDecision(true));

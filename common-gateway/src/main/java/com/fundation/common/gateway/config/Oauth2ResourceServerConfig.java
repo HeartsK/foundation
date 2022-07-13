@@ -8,8 +8,6 @@ import com.foundation.common.core.constant.AuthConstant;
 import com.fundation.common.gateway.componet.CustomReactiveAuthorizationManager;
 import com.fundation.common.gateway.componet.CustomServerAccessDeniedHandler;
 import com.fundation.common.gateway.componet.CustomServerAuthenticationEntryPoint;
-import com.fundation.common.gateway.componet.CustomServerBearerTokenAuthenticationConverter;
-import com.fundation.common.gateway.filter.TokenTransferFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -17,7 +15,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
-import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -63,7 +60,7 @@ public class Oauth2ResourceServerConfig {
                 // 还没有认证时发生认证异常，比如token过期，token不合法
                 .authenticationEntryPoint(new CustomServerAuthenticationEntryPoint())
                 // 将一个字符串token转换成一个认证对象
-                .bearerTokenConverter(new CustomServerBearerTokenAuthenticationConverter())
+//                .bearerTokenConverter(new CustomServerBearerTokenAuthenticationConverter())
                 .and()
                 .authorizeExchange()
                 // 白名单请求全部放行
@@ -77,8 +74,8 @@ public class Oauth2ResourceServerConfig {
                 .authenticationEntryPoint(new CustomServerAuthenticationEntryPoint())
                 .and()
                 .csrf()
-                .disable()
-                .addFilterAfter(new TokenTransferFilter(), SecurityWebFiltersOrder.AUTHENTICATION);
+                .disable();
+//                .addFilterAfter(new TokenTransferFilter(), SecurityWebFiltersOrder.AUTHENTICATION);
 
         return http.build();
     }
