@@ -55,7 +55,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
             return ResponseUtils.writeErrorInfo(response, ResultCode.UNAUTHORIZED);
         }
         try {
-            //进行token有效性校验后，从token中解析用户信息并设置到Header中去
+            //todo: 进行token有效性校验后，从token中解析用户信息并设置到Header中去
             String realToken = token.replace(jwtConfig.getTokenPrefix(), "");
             JWSObject jwsObject = JWSObject.parse(realToken);
             String userStr = jwsObject.getPayload().toString();

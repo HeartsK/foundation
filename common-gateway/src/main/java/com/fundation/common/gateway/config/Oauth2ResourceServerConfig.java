@@ -1,6 +1,7 @@
 package com.fundation.common.gateway.config;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.io.IoUtil;
 import com.foundation.common.core.config.IgnoreProperties;
 import com.fundation.common.gateway.componet.CustomReactiveAuthorizationManager;
 import com.fundation.common.gateway.componet.CustomServerAccessDeniedHandler;
@@ -11,7 +12,7 @@ import com.fundation.common.gateway.filter.TokenTransferFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
@@ -28,7 +29,7 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 import reactor.core.publisher.Mono;
 
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
@@ -106,9 +107,9 @@ public class Oauth2ResourceServerConfig {
      * 解码jwt
      */
     public ReactiveJwtDecoder jwtDecoder() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        Resource resource = new FileSystemResource("/Users/huan/code/study/idea/spring-cloud-alibaba-parent/gateway-oauth2/new-authoriza-server-public-key.pem");
-        String publicKeyStr = String.join("", Files.readAllLines(resource.getFile().toPath()));
-        byte[] publicKeyBytes = Base64.getDecoder().decode(publicKeyStr);
+        Resource resource = new ClassPathResource("public.key");
+        InputStream is = resource.getInputStream();
+        byte[] publicKeyBytes = Base64.getDecoder().decode(IoUtil.read(is).toString());
         X509EncodedKeySpec keySpec = new X509EncodedKeySpec(publicKeyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         RSAPublicKey rsaPublicKey = (RSAPublicKey) keyFactory.generatePublic(keySpec);
