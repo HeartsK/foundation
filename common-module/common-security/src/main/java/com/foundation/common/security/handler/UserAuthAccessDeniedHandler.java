@@ -1,7 +1,7 @@
 package com.foundation.common.security.handler;
 
 import com.foundation.common.core.utils.api.R;
-import com.foundation.common.core.utils.api.ResultUtils;
+import com.foundation.common.core.utils.api.ResponseUtils;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
@@ -18,6 +18,6 @@ public class UserAuthAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException e) throws IOException, ServletException {
-        ResultUtils.responseJson(response, R.forbidden(e.getMessage()));
+        ResponseUtils.responseJson(response, R.forbidden(e.getMessage()));
     }
 }

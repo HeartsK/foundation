@@ -2,7 +2,7 @@ package com.foundation.common.security.handler;
 
 import com.foundation.common.core.config.JWTConfig;
 import com.foundation.common.core.utils.api.R;
-import com.foundation.common.core.utils.api.ResultUtils;
+import com.foundation.common.core.utils.api.ResponseUtils;
 import com.foundation.common.security.utils.JWTUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -34,7 +34,7 @@ public class UserLoginSuccessHandler implements AuthenticationSuccessHandler{
         String token = JWTUtils.generateToken(details, jwtConfig.getSecret(), jwtConfig.getExpiration());
         token = jwtConfig.getTokenPrefix() + token;
         // 封装返回参数
-        ResultUtils.responseJson(response, R.success(token,"登录成功"));
+        ResponseUtils.responseJson(response, R.success(token,"登录成功"));
     }
 
 }

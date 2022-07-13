@@ -10,6 +10,8 @@ public enum ResultCode{
 
     SUCCESS(200, "操作成功"),
     FAILED(500, "操作失败"),
+    TOKEN_INVALID_OR_EXPIRED(230, "token无效或已过期"),
+    TOKEN_ACCESS_FORBIDDEN(231, "token已被禁止访问"),
     VALIDATE_FAILED(404, "参数检验失败"),
     UNAUTHORIZED(401, "暂未登录或token已经过期"),
     FORBIDDEN(403, "没有相关权限"),

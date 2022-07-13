@@ -1,11 +1,13 @@
 package com.fundation.common.gateway.config;
 
+import cn.hutool.core.convert.Convert;
+import com.foundation.common.core.config.IgnoreProperties;
 import com.fundation.common.gateway.componet.CustomReactiveAuthorizationManager;
 import com.fundation.common.gateway.componet.CustomServerAccessDeniedHandler;
 import com.fundation.common.gateway.componet.CustomServerAuthenticationEntryPoint;
 import com.fundation.common.gateway.componet.CustomServerBearerTokenAuthenticationConverter;
+import com.fundation.common.gateway.constant.SecurityConstants;
 import com.fundation.common.gateway.filter.TokenTransferFilter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -42,7 +44,10 @@ import java.util.Base64;
 @EnableWebFluxSecurity
 public class Oauth2ResourceServerConfig {
 
-    @Autowired
+    @javax.annotation.Resource
+    private IgnoreProperties ignoreProperties;
+
+    @javax.annotation.Resource
     private CustomReactiveAuthorizationManager customReactiveAuthorizationManager;
 
     @Bean
@@ -60,8 +65,8 @@ public class Oauth2ResourceServerConfig {
                 .bearerTokenConverter(new CustomServerBearerTokenAuthenticationConverter())
                 .and()
                 .authorizeExchange()
-                // 所有以 /auth/** 开头的请求全部放行
-                .pathMatchers("/auth/**", "/favicon.ico").permitAll()
+                // 白名单请求全部放行
+                .pathMatchers(Convert.toStrArray(ignoreProperties.getWhiteUrls())).permitAll()
                 // 所有的请求都交由此处进行权限判断处理
                 .anyExchange()
                 .access(customReactiveAuthorizationManager)
@@ -85,7 +90,7 @@ public class Oauth2ResourceServerConfig {
         // 从jwt 中获取该令牌可以访问的权限
         JwtGrantedAuthoritiesConverter authoritiesConverter = new JwtGrantedAuthoritiesConverter();
         // 取消权限的前缀，默认会加上SCOPE_
-        authoritiesConverter.setAuthorityPrefix("");
+        authoritiesConverter.setAuthorityPrefix(SecurityConstants.AUTHORITY_PREFIX);
         // 从那个字段中获取权限
         authoritiesConverter.setAuthoritiesClaimName("scope");
 

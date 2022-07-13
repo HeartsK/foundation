@@ -1,7 +1,7 @@
 package com.foundation.common.security.handler;
 
 import com.foundation.common.core.utils.api.R;
-import com.foundation.common.core.utils.api.ResultUtils;
+import com.foundation.common.core.utils.api.ResponseUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -20,6 +20,6 @@ public class UserAuthenticationEntryPointHandler implements AuthenticationEntryP
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
-        ResultUtils.responseJson(response, R.unauthorized(e.getMessage()));
+        ResponseUtils.responseJson(response, R.unauthorized(e.getMessage()));
     }
 }

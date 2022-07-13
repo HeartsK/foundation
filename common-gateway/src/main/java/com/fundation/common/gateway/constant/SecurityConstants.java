@@ -7,4 +7,6 @@ package com.fundation.common.gateway.constant;
 public class SecurityConstants {
 
     public static final String AUTHORITY_PREFIX = "ROLE_";
+
+    public static final String JWT_AUTHORITIES_KEY = "authorities";
 }
