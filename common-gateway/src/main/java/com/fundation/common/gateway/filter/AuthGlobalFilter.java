@@ -9,6 +9,7 @@ import com.foundation.common.core.utils.api.ResultCode;
 import com.nimbusds.jose.JWSObject;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
@@ -28,6 +29,7 @@ import java.text.ParseException;
  */
 @Component
 @Slf4j
+@RefreshScope
 public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
     @Resource

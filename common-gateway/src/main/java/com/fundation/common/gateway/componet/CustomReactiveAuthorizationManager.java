@@ -63,18 +63,19 @@ public class CustomReactiveAuthorizationManager implements ReactiveAuthorization
         ServerHttpRequest request = exchange.getRequest();
         String path = request.getURI().getPath();
         String method = request.getMethodValue();
+        //todo 临时方案
         String authorities = AUTH_MAP.get(path);
         log.info("访问路径:[{}],所需要的权限是:[{}]", path, authorities);
+        // option 请求，全部放行
+        if (request.getMethod() == HttpMethod.OPTIONS) {
+            return Mono.just(new AuthorizationDecision(true));
+        }
         //白名单请求全部放行
         AntPathMatcher matcher = new AntPathMatcher();
         for (String whiteUrl : ignoreProperties.getWhiteUrls()) {
             if (matcher.match(whiteUrl, path)){
                 return Mono.just(new AuthorizationDecision(true));
             }
-        }
-        // option 请求，全部放行
-        if (request.getMethod() == HttpMethod.OPTIONS) {
-            return Mono.just(new AuthorizationDecision(true));
         }
         //判断是否携带token信息
         String token = request.getHeaders().getFirst(jwtConfig.getTokenHeader());

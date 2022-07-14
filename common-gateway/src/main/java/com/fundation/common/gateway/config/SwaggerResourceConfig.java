@@ -20,7 +20,6 @@ import java.util.List;
 @Primary
 public class SwaggerResourceConfig implements SwaggerResourcesProvider {
 
-
     /**
      * 此写法只能获取配置文件里面的路由规则
      */

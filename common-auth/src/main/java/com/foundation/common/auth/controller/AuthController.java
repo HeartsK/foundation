@@ -42,12 +42,12 @@ public class AuthController {
 
     @ApiOperation(value = "OAuth2认证", notes = "登录入口")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "grant_type", defaultValue = "password", value = "授权模式", required = true),
-            @ApiImplicitParam(name = "client_id", defaultValue = "client", value = "Oauth2客户端ID", required = true),
-            @ApiImplicitParam(name = "client_secret", defaultValue = "123456", value = "Oauth2客户端秘钥", required = true),
-            @ApiImplicitParam(name = "refresh_token", value = "刷新token"),
-            @ApiImplicitParam(name = "username", defaultValue = "admin", value = "用户名"),
-            @ApiImplicitParam(name = "password", defaultValue = "123456", value = "用户密码")
+            @ApiImplicitParam(name = "grant_type", defaultValue = "password", value = "授权模式", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "client_id", defaultValue = "client", value = "Oauth2客户端ID", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "client_secret", defaultValue = "123456", value = "Oauth2客户端秘钥", required = true, paramType = "header"),
+            @ApiImplicitParam(name = "refresh_token", value = "刷新token", paramType = "body"),
+            @ApiImplicitParam(name = "username", defaultValue = "admin", value = "用户名", paramType = "body"),
+            @ApiImplicitParam(name = "password", defaultValue = "123456", value = "用户密码", paramType = "body")
     })
     @PostMapping("/token")
     public Object postAccessToken(

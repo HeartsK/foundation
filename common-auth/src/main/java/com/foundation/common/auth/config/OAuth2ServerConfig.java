@@ -75,7 +75,7 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
          * */
 
         clients.inMemory() //.inMemory()放入内存。我们为了方便，直接放在内存中生成client，正常情况下是我们主动找授权服务器注册的时候才会有处理。
-                .withClient(AuthConstant.ADMIN_CLIENT_ID) //指定client。参数为唯一client的id
+                .withClient(AuthConstant.TEST_CLIENT_ID) //指定client。参数为唯一client的id
                 .secret(passwordEncoder.encode("123456")) //指定密钥
 //                .redirectUris("http://www.baidu.com") //指定重定向的地址,通过重定向地址拿到授权码。
                 .redirectUris("http://localhost:8081/login") //单点登录到另一服务器

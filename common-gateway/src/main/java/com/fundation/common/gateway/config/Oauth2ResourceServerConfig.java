@@ -50,32 +50,50 @@ public class Oauth2ResourceServerConfig {
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) throws NoSuchAlgorithmException, IOException, InvalidKeySpecException {
-        http.oauth2ResourceServer()
+//        http.oauth2ResourceServer()
+//                .jwt()
+//                .jwtAuthenticationConverter(jwtAuthenticationConverter())
+//                .jwtDecoder(jwtDecoder())
+//                .and()
+//                // 认证成功后没有权限操作
+//                .accessDeniedHandler(new CustomServerAccessDeniedHandler())
+//                // 还没有认证时发生认证异常，比如token过期，token不合法
+//                .authenticationEntryPoint(new CustomServerAuthenticationEntryPoint())
+//                // 将一个字符串token转换成一个认证对象
+////                .bearerTokenConverter(new CustomServerBearerTokenAuthenticationConverter())
+//                .and()
+//                .authorizeExchange()
+//                // 白名单请求全部放行
+//                .pathMatchers(Convert.toStrArray(ignoreProperties.getWhiteUrls())).permitAll()
+//                // 所有的请求都交由此处进行权限判断处理
+//                .anyExchange()
+//                .access(customReactiveAuthorizationManager)
+//                .and()
+//                .exceptionHandling()
+//                .accessDeniedHandler(new CustomServerAccessDeniedHandler())//处理未授权
+//                .authenticationEntryPoint(new CustomServerAuthenticationEntryPoint())//处理未认证
+//                .and()
+//                .csrf()
+//                .disable();
+////                .addFilterAfter(new TokenTransferFilter(), SecurityWebFiltersOrder.AUTHENTICATION);
+//
+//        return http.build();
+        http
+                .oauth2ResourceServer()
                 .jwt()
                 .jwtAuthenticationConverter(jwtAuthenticationConverter())
-                .jwtDecoder(jwtDecoder())
-                .and()
-                // 认证成功后没有权限操作
-                .accessDeniedHandler(new CustomServerAccessDeniedHandler())
-                // 还没有认证时发生认证异常，比如token过期，token不合法
-                .authenticationEntryPoint(new CustomServerAuthenticationEntryPoint())
-                // 将一个字符串token转换成一个认证对象
-//                .bearerTokenConverter(new CustomServerBearerTokenAuthenticationConverter())
-                .and()
-                .authorizeExchange()
-                // 白名单请求全部放行
+                .jwtDecoder(jwtDecoder())   // 本地加载公钥
+        //.jwkSetUri()  // 远程获取公钥，默认读取的key是spring.security.oauth2.resourceserver.jwt.jwk-set-uri
+        ;
+        http.oauth2ResourceServer().authenticationEntryPoint(new CustomServerAuthenticationEntryPoint());
+        http.authorizeExchange()
                 .pathMatchers(Convert.toStrArray(ignoreProperties.getWhiteUrls())).permitAll()
-                // 所有的请求都交由此处进行权限判断处理
-                .anyExchange()
-                .access(customReactiveAuthorizationManager)
+                .anyExchange().access(customReactiveAuthorizationManager)
                 .and()
                 .exceptionHandling()
-                .accessDeniedHandler(new CustomServerAccessDeniedHandler())
-                .authenticationEntryPoint(new CustomServerAuthenticationEntryPoint())
-                .and()
-                .csrf()
-                .disable();
-//                .addFilterAfter(new TokenTransferFilter(), SecurityWebFiltersOrder.AUTHENTICATION);
+                .accessDeniedHandler(new CustomServerAccessDeniedHandler()) // 处理未授权
+                .authenticationEntryPoint(new CustomServerAuthenticationEntryPoint()) //处理未认证
+                .and().csrf().disable();
 
         return http.build();
     }

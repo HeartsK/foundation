@@ -18,6 +18,10 @@ import java.util.List;
 public class Knife4jProperties {
 
     /**
+     * oauth2的密码url
+     */
+    private String oauth2TokenUrl;
+    /**
      * 是否开启knife4j
      */
     private Boolean enabled;
