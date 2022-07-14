@@ -10,7 +10,7 @@ public class AuthConstant {
 
     public static final String JWT_AUTHORITIES_KEY = "authorities";
 
-    public static final String ADMIN_CLIENT_ID = "admin";
+    public static final String ADMIN_CLIENT_ID = "admin-web";
 
     public static final String PORTAL_CLIENT_ID = "portal";
     /**

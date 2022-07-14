@@ -1,24 +1,29 @@
 package com.foundation.common.auth.config;
 
 import com.foundation.common.auth.componet.JwtTokenEnhancer;
-import com.foundation.common.core.constant.AuthConstant;
 import com.foundation.common.auth.exception.CustomWebResponseExceptionTranslator;
+import com.foundation.common.auth.extension.refresh.PreAuthenticatedUserDetailsService;
+import com.foundation.common.core.constant.AuthConstant;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.provider.CompositeTokenGranter;
+import org.springframework.security.oauth2.provider.TokenGranter;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author
@@ -52,13 +57,17 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
         delegates.add(jwtTokenEnhancer);
         delegates.add(jwtAccessTokenConverter);//还要把转换器放进去用来实现jwtTokenEnhancer的互相转换
         chain.setTokenEnhancers(delegates);
+        // 获取原有默认授权模式(授权码模式、密码模式、客户端模式、简化模式)的授权者
+        List<TokenGranter> granterList = new ArrayList<>(Collections.singletonList(endpoints.getTokenGranter()));
+        CompositeTokenGranter compositeTokenGranter = new CompositeTokenGranter(granterList);
         endpoints.authenticationManager(authenticationManager)
-                .userDetailsService(userDetailsService)
                 //可以看到主要是增加了 JwtAccessTokenConverter JWT访问令牌转换器和JwtTokenStore JWT令牌存储组件，
                 //通过AuthorizationServerEndpointsConfigurer 授权服务器端点配置加入两个实例
                 .tokenStore(tokenStore)
                 .accessTokenConverter(jwtAccessTokenConverter)
+                .tokenGranter(compositeTokenGranter)
                 .exceptionTranslator(new CustomWebResponseExceptionTranslator())
+                .tokenServices(tokenServices(endpoints))
                 .tokenEnhancer(chain); //设置JWT增强内容
     }
 
@@ -91,6 +100,32 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
                  */
                 .authorizedGrantTypes("authorization_code", "password", "refresh_token"); //指定授权类型 可以多种授权类型并存。
 
+    }
+
+    public DefaultTokenServices tokenServices(AuthorizationServerEndpointsConfigurer endpoints){
+        DefaultTokenServices tokenServices = new DefaultTokenServices();
+        tokenServices.setTokenStore(endpoints.getTokenStore());
+        tokenServices.setSupportRefreshToken(true);
+        TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+        List<TokenEnhancer> tokenEnhancers = new ArrayList<>();
+        tokenEnhancers.add(jwtTokenEnhancer);
+        tokenEnhancers.add(jwtAccessTokenConverter);
+        tokenEnhancerChain.setTokenEnhancers(tokenEnhancers);
+        // 多用户体系下，刷新token再次认证客户端ID和 UserDetailService 的映射Map
+        Map<String, UserDetailsService> clientUserDetailsServiceMap = new HashMap<>();
+//        clientUserDetailsServiceMap.put(SecurityConstants.ADMIN_CLIENT_ID, sysUserDetailsService); // 系统管理客户端
+//        clientUserDetailsServiceMap.put(SecurityConstants.APP_CLIENT_ID, memberUserDetailsService); // Android、IOS、H5 移动客户端
+//        clientUserDetailsServiceMap.put(SecurityConstants.WEAPP_CLIENT_ID, memberUserDetailsService); // 微信小程序客户端
+        // 刷新token模式下，重写预认证提供者替换其AuthenticationManager，可自定义根据客户端ID和认证方式区分用户体系获取认证用户信息
+        PreAuthenticatedAuthenticationProvider provider = new PreAuthenticatedAuthenticationProvider();
+        provider.setPreAuthenticatedUserDetailsService(new PreAuthenticatedUserDetailsService<>(clientUserDetailsServiceMap));
+        tokenServices.setAuthenticationManager(new ProviderManager(Collections.singletonList(provider)));
+        /** refresh_token有两种使用方式：重复使用(true)、非重复使用(false)，默认为true
+         *  1 重复使用：access_token过期刷新时， refresh_token过期时间未改变，仍以初次生成的时间为准
+         *  2 非重复使用：access_token过期刷新时， refresh_token过期时间延续，在refresh_token有效期内刷新便永不失效达到无需再次登录的目的
+         */
+        tokenServices.setReuseRefreshToken(true);
+        return tokenServices;
     }
 
     /**
