@@ -36,7 +36,7 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
     @Resource
     private AuthenticationManager authenticationManager;
     @Resource
-    private UserDetailsService userDetailsService;
+    private UserDetailsService userService;
     @Resource(name = "jwtTokenStore")
     private TokenStore tokenStore;
     @Resource(name = "jwtAccessTokenConverter")
@@ -113,7 +113,7 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
         tokenEnhancerChain.setTokenEnhancers(tokenEnhancers);
         // 多用户体系下，刷新token再次认证客户端ID和 UserDetailService 的映射Map
         Map<String, UserDetailsService> clientUserDetailsServiceMap = new HashMap<>();
-        clientUserDetailsServiceMap.put(AuthConstant.ADMIN_CLIENT_ID, userDetailsService);
+        clientUserDetailsServiceMap.put(AuthConstant.ADMIN_CLIENT_ID, userService);
 //        clientUserDetailsServiceMap.put(SecurityConstants.ADMIN_CLIENT_ID, sysUserDetailsService); // 系统管理客户端
 //        clientUserDetailsServiceMap.put(SecurityConstants.APP_CLIENT_ID, memberUserDetailsService); // Android、IOS、H5 移动客户端
 //        clientUserDetailsServiceMap.put(SecurityConstants.WEAPP_CLIENT_ID, memberUserDetailsService); // 微信小程序客户端
