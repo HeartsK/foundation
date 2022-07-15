@@ -27,7 +27,6 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-;
 
 @Api(tags = "认证中心")
 @RestController

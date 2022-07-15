@@ -47,7 +47,7 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
     private ClientDetailsServiceImpl clientDetailsService;
 
     /**
-     * 定义授权和令牌端点以及令牌服务
+     * 配置授权（authorization）以及令牌（token）的访问端点和令牌服务(token services)
      */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
@@ -72,7 +72,7 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
     }
 
     /**
-     * 授权配置
+     * OAuth2客户端
      *
      * @param clients
      * @throws Exception
