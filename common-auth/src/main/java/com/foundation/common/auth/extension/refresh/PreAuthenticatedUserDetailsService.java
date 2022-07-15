@@ -74,7 +74,8 @@ public class PreAuthenticatedUserDetailsService<T extends Authentication> implem
                 default:
                     return memberUserDetailsService.loadUserByUsername(authentication.getName());
             }
-        } else */if (clientId.equals(AuthConstant.ADMIN_CLIENT_ID)) {
+        } else */
+        if (clientId.equals(AuthConstant.ADMIN_CLIENT_ID)) {
             // 管理系统的用户体系是系统用户，认证方式通过用户名 username 认证
             switch (authenticationIdentityEnum) {
                 default:

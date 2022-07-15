@@ -92,17 +92,17 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
 //                .refreshTokenValiditySeconds(60 * 60 * 24) //设置refresh token失效时间
 //                .scopes("all") //指定授权范围
 //                .autoApprove(true) //自动授权，不需要手动允许了
-                /**
-                 * 授权类型：
-                 * "authorization_code" 授权码模式
-                 * "password"密码模式
-                 * "refresh_token" 刷新令牌
-                 */
+        /**
+         * 授权类型：
+         * "authorization_code" 授权码模式
+         * "password"密码模式
+         * "refresh_token" 刷新令牌
+         */
 //                .authorizedGrantTypes("authorization_code", "password", "refresh_token"); //指定授权类型 可以多种授权类型并存。
 
     }
 
-    public DefaultTokenServices tokenServices(AuthorizationServerEndpointsConfigurer endpoints){
+    public DefaultTokenServices tokenServices(AuthorizationServerEndpointsConfigurer endpoints) {
         DefaultTokenServices tokenServices = new DefaultTokenServices();
         tokenServices.setTokenStore(endpoints.getTokenStore());
         tokenServices.setSupportRefreshToken(true);
@@ -125,6 +125,7 @@ public class OAuth2ServerConfig extends AuthorizationServerConfigurerAdapter {
          *  1 重复使用：access_token过期刷新时， refresh_token过期时间未改变，仍以初次生成的时间为准
          *  2 非重复使用：access_token过期刷新时， refresh_token过期时间延续，在refresh_token有效期内刷新便永不失效达到无需再次登录的目的
          */
+        tokenServices.setClientDetailsService(clientDetailsService);
         tokenServices.setReuseRefreshToken(true);
         return tokenServices;
     }
